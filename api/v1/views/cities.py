@@ -42,7 +42,7 @@ def delete(city_id):
     if not city_by_id:
         abort(404)
 
-    storage.delete(city_by_id)
+    city_by_id.delete()
     storage.save()
 
     return jsonify({}), 200
@@ -63,8 +63,7 @@ def post(state_id):
         abort(400, "Missing name")
 
     city = City(name=body_request.get('name'), state_id=state_by_id.id)
-    storage.new(city)
-    storage.save()
+    city.save()
 
     return jsonify(city.to_dict()), 201
 
@@ -83,6 +82,6 @@ def update(city_id):
         abort(400, "Not a JSON")
 
     city_by_id.name = body_request.get('name', city_by_id.name)
-    storage.save()
+    city_by_id.save()
 
     return jsonify(city_by_id.to_dict()), 200
