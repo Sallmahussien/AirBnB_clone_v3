@@ -72,8 +72,11 @@ def update_user(user_id):
     if not body_request:
         abort(400, "Not a JSON")
 
-    user_by_id.email = body_request.get('email', user_by_id.email)
-    user_by_id.password = body_request.get('password', user_by_id.password)
+    attributes_to_update = ['first_name', 'last_name', 'email', 'password']
+
+    for attribute in attributes_to_update:
+        setattr(user_by_id, attribute,
+                body_request.get(attribute, getattr(user_by_id, attribute)))
     storage.save()
 
     return jsonify(user_by_id.to_dict()), 200
