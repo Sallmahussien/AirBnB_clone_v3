@@ -59,7 +59,7 @@ def update_amenity(amenity_id):
 
     body_request = request.get_json()
     if not body_request:
-        make_response("Not a JSON", 400)
+        return make_response("Not a JSON", 400)
 
     setattr(amenity_by_id, 'name', body_request.get('name'))
     storage.save()
