@@ -102,7 +102,7 @@ def places_search():
 
     if len(body_request) == 0:
         return jsonify([place.to_dict()
-                        for place in storage.all('Place').values()]), 201
+                        for place in storage.all('Place').values()])
 
     places_list = []
     cities_by_states = []
@@ -130,7 +130,7 @@ def places_search():
 
         places_list = filter_places_with_amenities(places_list, amenities_list)
 
-    return jsonify([place.to_dict() for place in places_list]), 201
+    return jsonify([place.to_dict() for place in places_list])
 
 
 def filter_places_with_amenities(places, amenities):
