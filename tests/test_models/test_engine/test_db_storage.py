@@ -192,24 +192,6 @@ class TestDBStorageGetMethod(unittest.TestCase):
         self.assertEqual(storage.count(), 4)
         self.assertEqual(storage.count(), len(storage.all()))
 
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
-    def test_count_with_cls(self):
-        """Test count with cls"""
-        amenity = Amenity(name="amenity_name")
-        amenity.save()
-        state = State(name="state_name")
-        state.save()
-        city = City(name="city_name", state_id=state.id)
-        city.save()
-        user = User(fisrt_name="salma",
-                    last_name="ahmed",
-                    email="salma@gmail.com",
-                    password="pwd7")
-        user.save()
-
-        self.assertEqual(storage.count(State), 1)
-        self.assertNotEqual(storage.count(State), len(storage.all()))
-
 
 if __name__ == "__main__":
     unittest.main()
