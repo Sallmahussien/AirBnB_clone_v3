@@ -17,4 +17,14 @@ def get_places(city_id):
 
     place_list = [place.to_dict() for place in city_by_id.places]
 
+
+@app_views.route('/places/<place_id>', methods=['GET'])
+def get_places_by_id(place_id):
+    """Return place based on a corresponding id"""
+    places_by_id = storage.get(Place, place_id)
+    if not places_by_id:
+        abort(404)
+
+    return make_response(jsonify(places_by_id.to_dict()), 200)
+
     return make_response(jsonify(place_list), 200)
