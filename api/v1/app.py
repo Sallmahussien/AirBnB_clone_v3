@@ -13,6 +13,7 @@ app.url_map.strict_slashes = False
 
 app.register_blueprint(app_views)
 
+
 @app.errorhandler(404)
 def not_found(error):
     """Implement Not found page"""
