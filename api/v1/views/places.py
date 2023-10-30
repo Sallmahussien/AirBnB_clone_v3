@@ -40,3 +40,47 @@ def delete_place(place_id):
     storage.save()
 
     return make_response({}, 200)
+
+
+@app_views.route('cities/<city_id>/places', methods=['POST'])
+def create_place(city_id):
+    """Create place."""
+    dictionary = request.get_json()
+    city = storage.get(City, city_id)
+    if city is None:
+        abort(404)
+    if dictionary is None:
+        abort(400, 'Not a JSON')
+    if 'user_id' not in dictionary:
+        abort(400, 'Missing user_id')
+    if storage.get(User, dictionary['user_id']) is None:
+        abort(404)
+    if 'name' not in dictionary:
+        abort(400, 'Missing name')
+    dictionary['city_id'] = city_id
+    place = Place(**dictionary)
+    place.save()
+    return make_response(jsonify(place.to_dict()), 201)
+
+
+@app_views.route('/places/<place_id>', methods=['PUT'])
+def update_place(place_id):
+    """Updates a place with specific id"""
+    place_by_id = storage.get(Place, place_id)
+    if not place_by_id:
+        abort(404)
+
+    body_request = request.get_json()
+    if not body_request:
+        return make_response("Not a JSON", 400)
+
+    attributes_to_update = ['name', 'description', 'number_rooms',
+                            'number_bathrooms', 'max_guest', 'price_by_night',
+                            'latitude', 'longitude']
+
+    for attribute in attributes_to_update:
+        setattr(place_by_id, attribute,
+                body_request.get(attribute, getattr(place_by_id, attribute)))
+    storage.save()
+
+    return make_response(jsonify(place_by_id.to_dict()), 200)
