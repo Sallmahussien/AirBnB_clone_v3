@@ -42,7 +42,7 @@ def create_amenity():
     body_request = request.get_json()
     if not body_request:
         return make_response("Not a JSON", 400)
-    if "name" not in body_request.keys():
+    if not body_request.get('name'):
         return make_response("Missing name", 400)
 
     amenity = Amenity(**body_request)
