@@ -30,14 +30,14 @@ def delete_amenities(place_id, amenity_id):
     if not place_by_id:
         abort(404)
 
-    amenity_by_id: Amenity = storage.get(Amenity, amenity_id)
+    amenity_by_id = storage.get(Amenity, amenity_id)
     if not amenity_by_id:
         abort(404)
 
     if amenity_by_id not in place_by_id.amenities:
         abort(404)
 
-    storage.delete(amenity_by_id)
+    amenity_by_id.delete()
     storage.save()
 
     return jsonify({}), 200
@@ -51,7 +51,7 @@ def link_amenity_to_place(place_id, amenity_id):
     if not place_by_id:
         abort(404)
 
-    amenity_by_id: Amenity = storage.get(Amenity, amenity_id)
+    amenity_by_id = storage.get(Amenity, amenity_id)
     if not amenity_by_id:
         abort(404)
 
