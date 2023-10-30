@@ -22,7 +22,9 @@ def get_amenities_by_place_id(place_id):
 
     return jsonify(amenities_list), 200
 
-@app_views.route('/places/<place_id>/amenities/<amenity_id>', methods=['DELETE'])
+
+@app_views.route('/places/<place_id>/amenities/<amenity_id>',
+                 methods=['DELETE'])
 def delete_amenties(place_id, amenity_id):
     """Deletes a Amenity object to a Place"""
     place_by_id = storage.get(Place, place_id)
@@ -34,7 +36,7 @@ def delete_amenties(place_id, amenity_id):
         abort(404)
 
     if getenv('HBNB_TYPE_STORAGE') == 'db':
-        amenities_by_place =  place_by_id.amenities
+        amenities_by_place = place_by_id.amenities
     else:
         amenities_by_place = place_by_id.amenity_ids
 
