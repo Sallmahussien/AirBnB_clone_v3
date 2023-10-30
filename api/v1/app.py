@@ -13,6 +13,11 @@ app.url_map.strict_slashes = False
 
 app.register_blueprint(app_views)
 
+@app.errorhandler(404)
+def not_found(error):
+    """Implement Not found page"""
+    return make_response(jsonify({"error": "Not found"}), 404)
+
 
 @app.teardown_appcontext
 def terminate(exc):
