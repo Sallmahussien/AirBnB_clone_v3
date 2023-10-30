@@ -21,7 +21,7 @@ def get_state(state_id):
     if not state_by_id:
         abort(404)
 
-    return jsonify(state_by_id.to_dict()), 200
+    return make_response(jsonify(state_by_id.to_dict()), 200)
 
 
 @app_views.route('/states/<state_id>', methods=['DELETE'])
@@ -34,7 +34,7 @@ def delete_state(state_id):
     state_by_id.delete()
     storage.save()
 
-    return jsonify({}), 200
+    return make_response(jsonify({}), 200)
 
 
 @app_views.route('/states', methods=['POST'])
@@ -51,7 +51,7 @@ def create_state():
     new_state = State(name=body_request.get('name'))
     new_state.save()
 
-    return jsonify(new_state.to_dict()), 201
+    return make_response(jsonify(new_state.to_dict()), 201)
 
 
 @app_views.route('/states/<state_id>', methods=['PUT'])
@@ -68,4 +68,4 @@ def update_state(state_id):
     state_by_id.name = body_request.get('name', state_by_id.name)
     state_by_id.save()
 
-    return jsonify(state_by_id.to_dict()), 200
+    return make_response(jsonify(state_by_id.to_dict()), 200)
