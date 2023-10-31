@@ -129,7 +129,7 @@ def places_search():
         amenities_list = []
         for amenity_id in amenities_ids:
             amenity = storage.get(Amenity, amenity_id)
-            if amenity_id:
+            if amenity:
                 amenities_list.append(amenity)
 
         places_list = filter_places_with_amenities(places_list, amenities_list)
