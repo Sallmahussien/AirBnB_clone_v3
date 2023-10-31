@@ -98,17 +98,25 @@ def update_place(place_id):
 def places_search():
     """retrieves all Place objects depending of the body of the request."""
     body_request = request.get_json()
-    if not body_request:
+    if body_request is None:
         abort(400, 'Not a JSON')
 
-    if len(body_request) == 0:
+    states_ids = body_request.get('states', [])
+    cities_ids = body_request.get('cities', [])
+    amenities_ids = body_request.get('amenities')
+
+    if len(body_request) == 0 or (len(states_ids) == 0 and
+                                  len(cities_ids) == 0 and
+                                  not amenities_ids):
         return jsonify([place.to_dict()
                         for place in storage.all('Place').values()])
 
-    places_list = []
-    cities_by_states = []
+    if len(states_ids) == 0 and len(cities_ids) == 0:
+        places_list = storage.all(Place).values()
+    else:
+        places_list = []
 
-    states_ids = body_request.get('states', [])
+    cities_by_states = []
 
     for state_id in states_ids:
         state = storage.get(State, state_id)
@@ -124,7 +132,6 @@ def places_search():
         if city_by_id and city_by_id not in cities_by_states:
             places_list.extend(city_by_id.places)
 
-    amenities_ids = body_request.get('amenities')
     if amenities_ids:
         amenities_list = []
         for amenity_id in amenities_ids:
