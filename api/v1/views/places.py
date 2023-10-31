@@ -124,14 +124,15 @@ def places_search():
         if city_by_id and city_by_id not in cities_by_states:
             places_list.extend(city_by_id.places)
 
-    amenities_ids = body_request.get('amenities', [])
-    amenities_list = []
-    for amenity_id in amenities_ids:
-        amenity = storage.get(Amenity, amenity_id)
-        if amenity_id:
-            amenities_list.append(amenity)
+    amenities_ids = body_request.get('amenities')
+    if amenities_ids:
+        amenities_list = []
+        for amenity_id in amenities_ids:
+            amenity = storage.get(Amenity, amenity_id)
+            if amenity_id:
+                amenities_list.append(amenity)
 
-    places_list = filter_places_with_amenities(places_list, amenities_list)
+        places_list = filter_places_with_amenities(places_list, amenities_list)
 
     return jsonify([place.to_dict() for place in places_list])
 
