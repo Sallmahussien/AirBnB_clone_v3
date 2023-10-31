@@ -8,6 +8,7 @@ from models.place import Place
 from models.user import User
 from models.state import State
 from models.amenity import Amenity
+from os import getenv
 
 
 @app_views.route('/cities/<city_id>/places', methods=['GET'])
@@ -107,19 +108,20 @@ def places_search():
     places_list = []
     cities_by_states = []
 
-    states_ids = body_request.get('states')
+    states_ids = body_request.get('states', [])
 
     for state_id in states_ids:
         state = storage.get(State, state_id)
-        cities_by_state = state.cities
-        cities_by_states.extend(cities_by_state)
-        for city in cities_by_state:
-            places_list.extend(city.places)
+        if state:
+            cities_by_state = state.cities
+            cities_by_states.extend(cities_by_state)
+            for city in cities_by_state:
+                places_list.extend(city.places)
 
-    cities_ids = body_request.get('cities')
+    cities_ids = body_request.get('cities', [])
     for city_id in cities_ids:
         city_by_id = storage.get(City, city_id)
-        if city_by_id not in cities_by_states:
+        if city_by_id and city_by_id not in cities_by_states:
             places_list.extend(city_by_id.places)
 
     amenities_ids = body_request.get('amenities')
@@ -136,7 +138,11 @@ def places_search():
 def filter_places_with_amenities(places, amenities):
     filtered_places = []
     for place in places:
-        for amenity in place.amenities:
+        if getenv('HBNB_TYPE_STORAGE') == 'db':
+            amenities_by_place = place.amenities
+        else:
+            amenities_by_place = place.amenity_ids
+        for amenity in amenities_by_place:
             if amenity in amenities:
                 filtered_places.append(place)
                 break
