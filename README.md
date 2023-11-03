@@ -1,4 +1,4 @@
-# AirBnB_clone_v2
+# AirBnB_clone_v3
 <div style="text-align: center;">
     <figure class="image">
         <img src="imgs/logo.png" alt="">
